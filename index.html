@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORT PLAYGROUND</title>
+    <link rel="stylesheet" href="styles/root.css">
+    <link rel="stylesheet" href="styles/layout.css">
+    <link rel="stylesheet" href="styles/components.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>ORT PLAYGROUND</h1>
+            <div class="mode-switch">
+                <button id="mode-json-to-ort" class="mode-btn active">JSON to ORT</button>
+                <button id="mode-ort-to-json" class="mode-btn">ORT to JSON</button>
+            </div>
+        </header>
+
+        <main class="main">
+            <div class="editor-panel">
+                <div class="panel-header">
+                    <span id="input-label">JSON Input</span>
+                    <span class="char-count" id="input-count">0 chars</span>
+                </div>
+                <textarea id="input-area" class="editor" placeholder="Enter your input here..."></textarea>
+            </div>
+
+            <div class="editor-panel">
+                <div class="panel-header">
+                    <span id="output-label">ORT Output</span>
+                    <span class="char-count" id="output-count">0 chars</span>
+                </div>
+                <textarea id="output-area" class="editor" placeholder="Result will appear here..." readonly></textarea>
+            </div>
+        </main>
+    </div>
+
+    <script type="module" src="scripts/main.js"></script>
+</body>
+</html>
