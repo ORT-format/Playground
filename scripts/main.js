@@ -28,7 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const outputEditor = new CodeMirrorEditor(outputContainer, {
         readOnly: true,
         language: null,
-        placeholder: 'Result will appear here...'
+        placeholder: 'Result will appear here...',
+        enableTokenVisualization: true
     });
 
     setupCharCounter(inputEditor, inputCount);
@@ -39,18 +40,40 @@ document.addEventListener('DOMContentLoaded', () => {
     const performConversion = () => {
         const mode = modeSwitch.getMode();
         converter.convert(mode);
-        updateCharCount(outputEditor.getValue(), outputCount, inputStats);
 
-        // Update output editor language based on mode
+        // Update output editor language based on mode (this resets the editor state)
         if (mode === 'json-to-ort') {
             outputEditor.setLanguage(null);
         } else {
             outputEditor.setLanguage('json');
         }
+
+        // Skip token calculation if there's an error
+        if (outputEditor.hasError()) {
+            // Clear token count display on error
+            outputCount.textContent = 'Error';
+            outputCount.classList.remove('stat-success', 'stat-error');
+            outputCount.classList.add('stat-error');
+
+            // Disable token visualization on error
+            outputEditor.toggleTokenVisualization(false);
+        } else {
+            const outputText = outputEditor.getValue();
+            updateCharCount(outputText, outputCount, inputStats);
+
+            // Always enable token visualization (must be after setLanguage)
+            outputEditor.toggleTokenVisualization(true);
+        }
     };
 
     const originalSwitchMode = modeSwitch.switchMode.bind(modeSwitch);
     modeSwitch.switchMode = (mode) => {
+        // Save current values before switching
+        const shouldSwap = !outputEditor.hasError();
+        const currentInput = inputEditor.getValue();
+        const currentOutput = outputEditor.getValue();
+
+        // Switch mode first
         originalSwitchMode(mode);
 
         // Update input editor language based on mode
@@ -60,6 +83,13 @@ document.addEventListener('DOMContentLoaded', () => {
             inputEditor.setLanguage(null);
         }
 
-        performConversion();
+        // Swap input and output if conversion was successful
+        if (shouldSwap && currentInput.trim() && currentOutput.trim()) {
+            // setValue triggers onChange which calls performConversion automatically
+            inputEditor.setValue(currentOutput);
+        } else {
+            // No swap, just perform conversion with existing input
+            performConversion();
+        }
     };
 });

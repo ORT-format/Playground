@@ -1,4 +1,4 @@
-import { encode } from 'https://esm.sh/gpt-tokenizer';
+import { encode, decode } from 'https://esm.sh/gpt-tokenizer';
 
 function formatNumber(num) {
     return num.toLocaleString();
@@ -49,4 +49,64 @@ export function setupCharCounter(editor, countElement) {
     // CodeMirror doesn't use traditional event listeners
     // The editor setup will handle change callbacks
     return updateCount;
+}
+
+export function visualizeTokens(text, visualizationElement) {
+    if (!text) {
+        visualizationElement.innerHTML = '<div class="token-empty">No text to tokenize</div>';
+        return;
+    }
+
+    const tokens = encode(text);
+
+    // Clear previous visualization
+    visualizationElement.innerHTML = '';
+
+    // Create a container for tokens
+    const tokensContainer = document.createElement('div');
+    tokensContainer.className = 'tokens-container';
+
+    // Process each token
+    tokens.forEach((tokenId, index) => {
+        const tokenText = decode([tokenId]);
+
+        const tokenSpan = document.createElement('span');
+        tokenSpan.className = 'token-item';
+        tokenSpan.setAttribute('data-token-id', tokenId);
+        tokenSpan.setAttribute('data-token-index', index);
+
+        // Handle special characters for display
+        let displayText = tokenText;
+        if (tokenText === '\n') {
+            displayText = '↵';
+            tokenSpan.classList.add('token-newline');
+        } else if (tokenText === '\t') {
+            displayText = '→';
+            tokenSpan.classList.add('token-tab');
+        } else if (tokenText === ' ') {
+            displayText = '·';
+            tokenSpan.classList.add('token-space');
+        } else if (tokenText.trim() === '') {
+            displayText = '⎵';
+            tokenSpan.classList.add('token-whitespace');
+        }
+
+        tokenSpan.textContent = displayText;
+
+        // Add tooltip with token info
+        const tooltip = document.createElement('span');
+        tooltip.className = 'token-tooltip';
+        tooltip.textContent = `Token #${index + 1}\nID: ${tokenId}\nText: "${tokenText}"`;
+        tokenSpan.appendChild(tooltip);
+
+        tokensContainer.appendChild(tokenSpan);
+    });
+
+    visualizationElement.appendChild(tokensContainer);
+
+    // Add summary
+    const summary = document.createElement('div');
+    summary.className = 'token-summary';
+    summary.textContent = `Total: ${tokens.length} tokens`;
+    visualizationElement.appendChild(summary);
 }

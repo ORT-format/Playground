@@ -18,6 +18,40 @@
 
     --font-main: "Pretendard Variable", sans-serif;
     --font-mono: "Fira Code", monospace;
+
+    /* Token colors */
+    --token-color-0-bg: #ffb6c14d;
+    --token-color-0-border: #ff6987cc;
+
+    --token-color-1-bg: #add8e64d;
+    --token-color-1-border: #6495edcc;
+
+    --token-color-2-bg: #90ee904d;
+    --token-color-2-border: #3cb371cc;
+
+    --token-color-3-bg: #ffffe04d;
+    --token-color-3-border: #ffd700cc;
+
+    --token-color-4-bg: #dda0dd4d;
+    --token-color-4-border: #ba55d3cc;
+
+    --token-color-5-bg: #ffdab94d;
+    --token-color-5-border: #ff8c00cc;
+
+    --token-color-6-bg: #b0e0e64d;
+    --token-color-6-border: #48d1cccc;
+
+    --token-color-7-bg: #f0e68c4d;
+    --token-color-7-border: #daa520cc;
+
+    --token-color-8-bg: #ffc0cb4d;
+    --token-color-8-border: #ff1493cc;
+
+    --token-color-9-bg: #98fb984d;
+    --token-color-9-border: #228b22cc;
+
+    --token-space-bg: #9ca3af1a;
+    --token-space-border: #9ca3af66;
 }
 
 html, body {
