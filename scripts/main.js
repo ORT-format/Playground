@@ -11,13 +11,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const modeSwitch = new ModeSwitch();
 
+    // Track input stats for comparison
+    let inputStats = { chars: 0, tokens: 0 };
+
     // Create CodeMirror editors
     const inputEditor = new CodeMirrorEditor(inputContainer, {
         readOnly: false,
         language: 'json',
         placeholder: 'Enter your input here...',
         onChange: (text) => {
-            updateCharCount(text, inputCount);
+            inputStats = updateCharCount(text, inputCount);
             performConversion();
         }
     });
@@ -36,7 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const performConversion = () => {
         const mode = modeSwitch.getMode();
         converter.convert(mode);
-        updateCharCount(outputEditor.getValue(), outputCount);
+        updateCharCount(outputEditor.getValue(), outputCount, inputStats);
 
         // Update output editor language based on mode
         if (mode === 'json-to-ort') {
